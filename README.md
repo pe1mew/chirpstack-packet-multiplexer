@@ -77,6 +77,30 @@ docker build -t IMAGENAME .
 
 Run `chirpstack-packet-multiplexer --help` for usage information.
 
+## packet-multiplexer operation explained
+
+packet-multiplexer can link 'n' UDP gateways to 'x' backends. The following matrix visualises this.
+```
+Gateway 1 EUI: 0101010101010101 ----+   |
+                                    |   |
+Gateway 2 EUI: 0202020202020202 ----+   |
+                                    |   |
+Gateway 3 EUI: 0303030303030303 ----+---+
+                                    |   \
+                                    |    ---- backend 1 IP: 192.16.1.5:1700
+                                    \
+                                     -------- backend 2 IP: localhost:1700
+                                   
+```
+
+
+### Example 1: multiple gateways to single backend.
+Here gateway 1 and 2 are connected to backend 1.
+
+### Example 2: Single gateway to multiple backend's.
+Here gateway 3 is connected to backend 1 and back end 2.
+
+
 ## Example configuration
 
 Executing `chirpstack-packet-multiplexer configfile` returns the following configuration
@@ -100,8 +124,12 @@ bind="0.0.0.0:1700"
 
 # Backends
 #
-# The backends to which the packet-multiplexer will forward the
-# packet-forwarder UDP data.
+# Multiple backends are supported by packet-multiplexer. This requires 
+# per backend a *[[packet_multiplexer.backend]]* entry with *host, 
+# (uplink_only) and gateway_ids* being configured.
+#
+# The backend to which the packet-multiplexer will forward the
+# packet-forwarder UDP data it received.
 #
 # Example:
 # [[packet_multiplexer.backend]]
@@ -113,7 +141,7 @@ bind="0.0.0.0:1700"
 # # Uplink only
 #
 # # This backend is for uplink only. It is not able to send data
-# # back to the gateways.
+# # back to the gateways unless *uplink_only* is set to *true*.
 # uplink_only=false
 # 
 # # Gateway IDs
