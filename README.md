@@ -20,19 +20,19 @@ sudo apt install apt-transport-https dirmngr
 
 Set up the key for this new repository:
 
-```
+```bash
 sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 1CE2AFD36DBCCA00
 ```
 
 Add the repository to the repository list by creating a new file:
 
-```
+```bash
 sudo echo "deb https://artifacts.chirpstack.io/packages/3.x/deb stable main" | sudo tee /etc/apt/sources.list.d/chirpstack.list
 ```
 
 Update the apt package cache and install `chirpstack-packet-multiplexer`:
 
-```
+```bash
 sudo apt update
 sudo apt install chirpstack-packet-multiplexer
 ```
@@ -41,8 +41,14 @@ To complete the installation, update the configuration file which is located
 at `/etc/chirpstack-packet-multiplexer/chirpstack-packet-multiplexer.toml` and (re)start
 the service:
 
-```
+```bash
 sudo systemctl restart chirpstack-packet-multiplexer
+```
+
+Tot see if configurationiss successfull and data is flowing trough packet-multiplexer analyse the log:
+
+```bash
+sudo journalctl -f -n 100 -u chirpstack-packet-multiplexer
 ```
 
 ## Building from source
